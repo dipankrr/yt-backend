@@ -7,3 +7,5 @@
 7. created USER & VIDEO model. 
 8. password hashing and matching using bcrypt
 9. gen jwt access and refresh token 
+10. setup cloudinary for images & videos, util func
+11. multer middleware for file handling
