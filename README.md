@@ -9,3 +9,7 @@
 9. gen jwt access and refresh token 
 10. setup cloudinary for images & videos, util func
 11. multer middleware for file handling
+
+12. all setup kinda configured 
+
+13. now write routes and controllers

@@ -1,13 +1,14 @@
 
-const asyncHandler = (func) => (req, res, next) => {
+const asyncHandler = (func) => {
+   return (req, res, next) => {
     Promise
-    .resolve( func(req, res, next) )  // TODO: have to use return explecitly as curly braces are used after arrow func or remove curly braces
+    .resolve( func(req, res, next) )
     .catch(
-        (error) => next(error)
-    )
+        (err) => next(err))
+    }
 }
 
-
+export {asyncHandler}
 
 
 // const asyncHandler = (func) => { return () => {//work here} }
