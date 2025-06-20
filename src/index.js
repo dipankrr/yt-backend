@@ -15,7 +15,7 @@ connectDB()
     })
     
     // app.on("error", (error) => {
-    //         console.log("ERORR", error);
+    //         console.log("ERROR", error);
     //         throw error
     // })
     

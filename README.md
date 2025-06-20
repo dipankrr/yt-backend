@@ -10,6 +10,7 @@
 10. setup cloudinary for images & videos, util func
 11. multer middleware for file handling
 
-12. all setup kinda configured 
+12. all setup kinda done 
 
 13. now write routes and controllers
+14. register user controller

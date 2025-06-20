@@ -8,11 +8,11 @@ const videoSchema = new Schema(
             required: true,
         },
         title: {
-            type: String, // Cloud/AWS
+            type: String,  
             required: true,
         },
         description: {
-            type: String, // Cloud/AWS
+            type: String,  
             required: true,
         },
         thumbnail: {
@@ -20,15 +20,15 @@ const videoSchema = new Schema(
             required: true,
         },
         duration: {
-            type: Number, // Cloud/AWS
+            type: Number,  
             required: true,
         },
         views: {
-            type: Number, // Cloud/AWS
+            type: Number,  
             default: 0,
         },
         isPublished: {
-            type: Boolean, // Cloud/AWS
+            type: Boolean, 
             default: true,
         },
         uploader: {

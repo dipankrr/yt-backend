@@ -12,7 +12,7 @@ export {asyncHandler}
 
 
 // const asyncHandler = (func) => { return () => {//work here} }
-// const asyncHandler = (func) => () => {//work here}     //(simpler & doesn't have to return exp)
+// const asyncHandler = (func) => () => //work here     //(simpler & doesn't have to return exp)
 
 
 // const asyncHandler = (fn) => async (req, res, next) => { 
