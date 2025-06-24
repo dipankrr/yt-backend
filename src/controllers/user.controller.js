@@ -93,7 +93,6 @@ const registerUser = asyncHandler( async (req, res) => {
 
 })
 
-
 const loginUser = asyncHandler( async (req, res) => {
 
     // get username/email and password from req.body
@@ -181,6 +180,130 @@ const logoutUser = asyncHandler( async (req, res) => {
 
 })
 
+const subscribeChannel = asyncHandler( async (req, res) => {
 
+    const userID = req.user?._id
+
+    User.findByIdAndUpdate(userID, {
+
+    })
+
+})
+
+const changeCurrentPassword = asyncHandler ( async (req, res) => {
+
+    const {oldPassword, newPassword} = req.body
+
+    const user = await User.findById(req.user?._id)
+
+    if (!(await user.isPasswordCorrect(oldPassword))){
+
+        throw new ApiError(402, "Wrong old password lol")
+    }
+
+    user.password = newPassword
+    await user.save({validateBeforeSave: true})
+
+    return res.
+    status(200)
+    .json(
+        new ApiResponse(200, {}, "Password changed successfully")
+    )
+
+})
+
+const updateAccountDetails = asyncHandler ( async (req, res) => {
+
+    const {fullname, email} = req.body 
+
+    if ( !fullname && !email) {
+        throw new ApiError(402, {}, "At least one field is required")
+    }
+
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+        throw new ApiError(409, {}, "Email already in use");
+    }
+
+    const fields = {}
+
+    if (fullname) fields.fullname = fullname;
+    if (email) fields.email = email;
+
+    const user = await User.findByIdAndUpdate(
+        req.user?._id, 
+        {
+            $set: fields
+        },
+        {
+            new: true
+        }
+    ).select("-password")
+
+
+    return res.status(200).json(
+        new ApiResponse(200, user, "Account details changed successfully" )
+    )
+})
+
+const updateAvatar = asyncHandler ( async (req, res) => {
+
+    const avatarLocalPath = req.file?.avatar?.path;
+
+    if(!avatarLocalPath){
+        throw new ApiError(401, {}, "Avatar local path is not found")
+    }
+
+    const avatar = uploadOnCloudinary(avatarLocalPath)
+
+    if(!avatar) {
+        throw new ApiError(500, {}, "Upload failed on cloudinary")
+    }
+
+    const user = await User.findByIdAndUpdate(
+         req.user?._id , 
+        {
+            $set: { avatar: avatar.url }
+        },
+        {
+            new: true
+        }
+        ).select("-password")
+
+    return res.status(200).json(
+        new ApiResponse(200, user, "Avatar changed successfully")
+    )
+
+})
+
+const updateCoverImage = asyncHandler ( async (req, res) => {
+
+    const coverImageLocalPath = req.file?.avatar?.path;
+
+    if(!coverImageLocalPath){
+        throw new ApiError(401, {}, "coverImage local path is not found")
+    }
+
+    const coverImage = uploadOnCloudinary(coverImageLocalPath)
+
+    if(!coverImage.url) {
+        throw new ApiError(500, {}, "coverImage Upload failed on cloudinary")
+    }
+
+    const user = await User.findByIdAndUpdate(
+         req.user?._id , 
+        {
+            $set: { coverImage: coverImage.url }
+        },
+        {
+            new: true
+        }
+        ).select("-password")
+
+    return res.status(200).json(
+        new ApiResponse(200, user, "Avatar changed successfully")
+    )
+
+})
 
 export {registerUser, loginUser, logoutUser}

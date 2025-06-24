@@ -44,7 +44,20 @@ const userSchema = new Schema (
         },
         refreshToken: {
             type: String
-        }
+        },
+
+        // subscriptions: [
+        //     {
+        //         type: Schema.Types.ObjectId,
+        //         ref: "User"
+        //     }
+        // ],
+        // subscribers: [
+        //     {
+        //         type: Schema.Types.ObjectId,
+        //         ref: "User"
+        //     }
+        // ]
         
     }
 , {timestamps: true})

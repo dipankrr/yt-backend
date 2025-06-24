@@ -53,3 +53,26 @@ export const verifyJWT = asyncHandler ( async (req, res, next ) => {
    } 
 
 })
+
+export const isLoggedIn = asyncHandler ( async (req, res, next) => {
+
+   // if user has jwt in cookies
+
+  try {
+    const accessToken = req.cookies?.accessToken
+ 
+    if (!accessToken) {
+       throw new ApiError(401, "no access token in cookies")
+    }
+ 
+    const verifiedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
+ 
+    if (!verifiedToken) {
+       throw new ApiError(401, "access token is invalid")
+    }
+ 
+    next()
+  } catch (error) {
+   throw new ApiError(404, "something went wrong")
+  }
+})

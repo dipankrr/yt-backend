@@ -16,3 +16,4 @@
 14. register user controller
 15. login user controller
 16. logout user controller and jwtVerify  middleware as req didn't have user, but had jwt, had to inject current user using jwt 
+17. more controllers. update user details, update avatar
