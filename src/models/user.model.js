@@ -47,7 +47,7 @@ const userSchema = new Schema (
         },
 
         // subscriptions: [
-        //     {
+        //     { 
         //         type: Schema.Types.ObjectId,
         //         ref: "User"
         //     }
@@ -58,6 +58,8 @@ const userSchema = new Schema (
         //         ref: "User"
         //     }
         // ]
+
+        // Bad idea because of Data Structure 
         
     }
 , {timestamps: true})

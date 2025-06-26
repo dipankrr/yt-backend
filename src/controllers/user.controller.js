@@ -270,6 +270,8 @@ const updateAvatar = asyncHandler ( async (req, res) => {
         }
         ).select("-password")
 
+        // TODO: deleteFileOnCloudinary and delete the older avatar
+
     return res.status(200).json(
         new ApiResponse(200, user, "Avatar changed successfully")
     )
@@ -306,4 +308,103 @@ const updateCoverImage = asyncHandler ( async (req, res) => {
 
 })
 
-export {registerUser, loginUser, logoutUser}
+const getUserChannelPage = asyncHandler ( async (req, res) => {
+
+    // get username from params/body
+    // check if channel (it is also a user) exists
+    // apply aggregation pipeline
+
+    const {username} = req.params
+
+    if ( !username?.trim() ) {
+        throw new ApiError(402,  "Channel name is required")
+    }
+
+    // const channelExists = await User.findOne({username: username})
+    // if (!channelExists) {
+    //     throw new ApiError(402, {}, "Channel does not exist")
+    // }
+
+    // MOTIVE: i want a single object with user's all data
+    // i don't have follows and followers count
+    // need to add those
+
+    const channel = await User.aggregate([
+        {
+            $match: { username: username?.toLowerCase() }
+        },
+         // { _id: (ObjectId), username: 123, password: 123 }
+        {
+            $lookup: { 
+                from: "subscriptions",
+                as: "subscribers",
+                localField: "_id", // this _id is username's _id
+                foreignField: "channel" // 
+            }
+        },
+
+        {
+            $lookup: { 
+                from: "subscriptions",
+                as: "subscribedTo",
+                localField: "_id",
+                foreignField: "subscriber"
+            }
+        },
+
+        {
+            $addFields: {
+                totalSubscriber: { 
+                    $size: "$subscribers" 
+                },
+                totalSubscribedTo: {
+                    $size: "$subscribedTo"
+                },
+                isSubscribed: {
+                    $cond: {
+                        if: { $in: [ req.user?._id, "$subscribers.subscriber" ]},
+                        then: true,
+                        else: false
+                    },
+                }
+            }
+        },
+
+        {
+            $project: {
+                fullname: 1,
+                username: 1,
+                email: 1,
+                avatar: 1,
+                coverImage: 1,
+                totalSubscriber: 1,
+                totalSubscribedTo: 1,
+                isSubscribed: 1
+
+            }
+        }
+    ])
+
+    if (!channel?.length) {
+        throw new ApiError ( 404, {}, "Channel does not exist")
+    }
+    
+    console.log(channel);
+    
+   
+    return res.status(200).json(
+        new ApiResponse(200, channel[0], "Channel fetched successfully")
+    )
+})
+
+const getSubscribedChannelList = asyncHandler ( async (req, res) => {
+
+})
+///////////////////////////////////////////////////////////////////////
+
+export {
+    registerUser, 
+    loginUser, 
+    logoutUser,
+    getUserChannelPage
+}
